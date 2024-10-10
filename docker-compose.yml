@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  gomon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: go run main.go 

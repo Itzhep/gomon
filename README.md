@@ -1,6 +1,12 @@
 # 🛠️ Gomon - A Nodemon clone Go File Watcher 🚀
 
 Gomon is a Go-based file watcher that automatically reloads your application when file changes are detected. Inspired by nodemon, it helps streamline development by automatically restarting your app.
+## Build Stats 
+[![Go](https://github.com/Itzhep/gomon/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/Itzhep/gomon/actions/workflows/go.yml)
+## Project Stats
+![GitHub repo size](https://img.shields.io/github/repo-size/Itzhep/gomon)
+![GitHub Release](https://img.shields.io/github/v/release/Itzhep/gomon)
+![GitHub Repo stars](https://img.shields.io/github/stars/Itzhep/gomon)
 
 ## 📦 Features
 
@@ -8,7 +14,8 @@ Gomon is a Go-based file watcher that automatically reloads your application whe
 - 🎨 CLI with color support for better visibility
 - 🔑 GitHub integration for releases
 - 📝 Simple and clean configuration
-
+- Docker Support
+- .git support
 ## 🏗️ Installation
 
 ### Via Go
@@ -38,12 +45,16 @@ go install github.com/Itzhep/gomon@latest
     ```bash
     go install
     ```
+4. Move to bin (optinal):
+```bash
+move gomon.exe C:\path\to\your\bin
+```
 ## 🚀 Usage
 
 1. Start Gomon with the path to your main application file:
 
     ```bash
-    gomon -app path/to/your/app.go
+    gomon --app path/to/your/app.go
     ```
 
 2. **Press `rs`** in the CLI to manually restart the application.
@@ -61,7 +72,7 @@ gomon -app path/to/your/app.go
 ```
 
 This command starts Gomon, watches for file changes, and restarts your application automatically.
-
+and in New update V2 it will build your app and run it 
 ## 🗂️ Contributing
 
 Contributions are welcome! Please submit a pull request or open an issue if you find any bugs or have suggestions.

@@ -31,8 +31,8 @@ go install github.com/Itzhep/gomon@latest
 2. Build the project:
 
     ```bash
-    go build
-        ```
+    go build -o gomon
+    ```
 3. Install the Project:
 
     ```bash
@@ -52,6 +52,13 @@ go install github.com/Itzhep/gomon@latest
 
 Gomon supports a variety of configurations directly from the CLI. You can specify the file to watch and other options like color settings for better CLI appearance.
 
+## 📝 Example
+
+Here's a basic example of how to use Gomon:
+
+```bash
+gomon -app path/to/your/app.go
+```
 
 This command starts Gomon, watches for file changes, and restarts your application automatically.
 

@@ -1,9 +1,7 @@
-# .github/workflows/release.yml
 name: goreleaser
 
 on:
   push:
-    # run only against tags
     tags:
       - "*"
 
@@ -12,11 +10,6 @@ permissions:
   packages: write
   issues: write
   id-token: write
-
-  # packages: write
-  # issues: write
-  # id-token: write
-
 
 jobs:
   goreleaser:
@@ -32,9 +25,8 @@ jobs:
         with:
           go-version: stable
 
-
-      - name: Set up GitHub CLI
-        uses: cli/gh-action@v2
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
 
       - name: Set up GPG
         run: |
@@ -56,17 +48,3 @@ jobs:
           GPG_FINGERPRINT: ${{ secrets.GPG_FINGERPRINT }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-      # More assembly might be required: Docker logins, GPG, etc.
-      # It all depends on your needs.
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          # either 'goreleaser' (default) or 'goreleaser-pro'
-          distribution: goreleaser
-          # 'latest', 'nightly', or a semver
-          version: "~> v2"
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-

@@ -21,7 +21,7 @@ jobs:
       with:
         go-version: '1.22.5'
 
-<<<<<<< HEAD
+
     - name: Install Dependencies
       run: go mod download
 
@@ -44,10 +44,10 @@ jobs:
       with:
         name: coverage-report
         path: coverage.html
-=======
+
     - name: Build
       run: go build -v ./...
 
     - name: Test
       run: go test -v ./...
->>>>>>> 4a08f121f7a71f3eb64a4ac6bbf605c6dedd6bfd
+

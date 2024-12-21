@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package main
 
 import (
@@ -152,7 +151,7 @@ func main() {
         os.Exit(1)
     }
 }
-=======
+
 package main
 
 import (
@@ -229,4 +228,4 @@ func main() {
 		os.Exit(1)
 	}
 }
->>>>>>> 4a08f121f7a71f3eb64a4ac6bbf605c6dedd6bfd
+

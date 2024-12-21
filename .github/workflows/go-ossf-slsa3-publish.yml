@@ -21,11 +21,7 @@ permissions: read-all
 
 jobs:
   # ========================================================================================================================================
-<<<<<<< HEAD
-  #     Prerequisite: Create a .slsa-goreleaser.yml in the root directory of your project.
-=======
-  #     Prerequesite: Create a .slsa-goreleaser.yml in the root directory of your project.
->>>>>>> 4a08f121f7a71f3eb64a4ac6bbf605c6dedd6bfd
+
   #       See format in https://github.com/slsa-framework/slsa-github-generator/blob/main/internal/builders/go/README.md#configuration-file
   #=========================================================================================================================================
   build:
@@ -34,7 +30,7 @@ jobs:
       contents: write # To upload release assets.
       actions: read   # To read workflow path.
     uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v1.4.0
-<<<<<<< HEAD
+
 
     steps:
       - name: Checkout
@@ -58,11 +54,11 @@ jobs:
         uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v1.4.0
         with:
           config: .slsa-goreleaser.yml
-=======
+
     with:
       go-version: 1.22.5
       # =============================================================================================================
       #     Optional: For more options, see https://github.com/slsa-framework/slsa-github-generator#golang-projects
       # =============================================================================================================
->>>>>>> 4a08f121f7a71f3eb64a4ac6bbf605c6dedd6bfd
+
 

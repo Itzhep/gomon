@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package watcher
 
 import (
@@ -288,7 +287,7 @@ func startLiveReloadServer() {
     go http.ListenAndServe(":35729", nil)
     color.HiGreen("🔄 Live reload server started on port 35729")
 }
-=======
+
 package watcher
 
 import (
@@ -503,4 +502,3 @@ func (w *Watcher) handleUserInput() {
 		color.Red("Error reading from stdin: %v", err)
 	}
 }
->>>>>>> 4a08f121f7a71f3eb64a4ac6bbf605c6dedd6bfd

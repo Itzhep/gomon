@@ -38,11 +38,7 @@ func liveReloadHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func startLiveReloadServer() {
-    http.HandleFunc("/livereload", liveReloadHandler)
-    go http.ListenAndServe(":35729", nil)
-    color.HiGreen("🔄 Live reload server started on port 35729")
-}
+
 
 func init() {
 	// Root command flags
@@ -102,7 +98,6 @@ var startCmd = &cobra.Command{
 			color.HiWhite("🚫 Excluded directories: %v", excludeDirs)
 		}
 
-		startLiveReloadServer()
 
 		if err := w.WatchAndReload(); err != nil {
 			color.Red("❌ Error: %v", err)
@@ -144,7 +139,6 @@ func printBanner() {
 }
 
 func main() {
-    startLiveReloadServer()
     rootCmd.AddCommand(startCmd, stopCmd, versionCmd)
     if err := rootCmd.Execute(); err != nil {
         color.Red("❌ Error: %v", err)

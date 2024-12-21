@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Use the official Golang image as the base image
 FROM golang:1.20
 
@@ -18,7 +18,7 @@ RUN go install github.com/fatih/color@latest
 RUN go insatll github.com/spf13/cobra@latest
 # Command to run the application
 CMD ["go", "run", "main.go"]
-=======
+
 # Use the official Golang image as the base image
 FROM golang:1.20
 
@@ -38,4 +38,4 @@ RUN go install github.com/fatih/color@latest
 RUN go insatll github.com/spf13/cobra@latest
 # Command to run the application
 CMD ["go", "run", "main.go"]
->>>>>>> 4a08f121f7a71f3eb64a4ac6bbf605c6dedd6bfd
+

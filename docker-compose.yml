@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 version: '3.8'
 
 services:
@@ -11,7 +10,7 @@ services:
     command: go run main.go
     ports:
       - "35729:35729" # Live reload server port
-=======
+
 version: '3.8'
 
 services:
@@ -22,4 +21,4 @@ services:
     volumes:
       - .:/app
     command: go run main.go 
->>>>>>> 4a08f121f7a71f3eb64a4ac6bbf605c6dedd6bfd
+

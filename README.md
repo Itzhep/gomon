@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🛠️ Gomon - A Nodemon Clone Go File Watcher 🚀
 
 Gomon is a Go-based file watcher that automatically reloads your application when file changes are detected. Inspired by nodemon, it helps streamline development by automatically restarting your app.

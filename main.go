@@ -128,7 +128,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number",
 	Run: func(cmd *cobra.Command, args []string) {
-		color.HiCyan("Gomon v2.0.0")
+		color.HiCyan("Gomon v3.0.2")
 	},
 }
 

@@ -64,12 +64,29 @@ func NewWatcher(appPath string, debounce time.Duration) (*Watcher, error) {
 		return nil, fmt.Errorf("failed to create watcher: %v", err)
 	}
 
-	dirPath := filepath.Dir(appPath)
+	absAppPath, err := filepath.Abs(appPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve app path: %v", err)
+	}
+
+	info, err := os.Stat(absAppPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to stat app path: %v", err)
+	}
+
+	var dirPath string
+
+	if info.IsDir() {
+		dirPath = absAppPath
+	} else {
+		dirPath = filepath.Dir(absAppPath)
+	}
+
 	outputDir := filepath.Join(dirPath, "bin")
 
 	return &Watcher{
 		fsWatcher: fsWatcher,
-		appPath:   appPath,
+		appPath:   absAppPath,
 		dirPath:   dirPath,
 		outputDir: outputDir,
 		debounce:  debounce,
@@ -78,8 +95,17 @@ func NewWatcher(appPath string, debounce time.Duration) (*Watcher, error) {
 			Env:   []string{"CGO_ENABLED=1"},
 		},
 		watchConfig: WatchConfig{
-			Extensions:  []string{".go", ".mod", ".sum"},
-			ExcludeDirs: []string{"vendor", "node_modules", ".git"},
+			Extensions: []string{
+				".go",
+				".mod",
+				".sum",
+			},
+			ExcludeDirs: []string{
+				"vendor",
+				"node_modules",
+				".git",
+				"bin",
+			},
 			IncludeDirs: []string{"."},
 		},
 		startTime: time.Now(),
@@ -109,28 +135,33 @@ func (w *Watcher) WatchAndReload() error {
 
 func (w *Watcher) addWatchDirs() error {
 	for _, dir := range w.watchConfig.IncludeDirs {
-		absDir := filepath.Join(w.dirPath, dir)
+		absDir := filepath.Clean(filepath.Join(w.dirPath, dir))
+
 		err := filepath.Walk(absDir, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
+
 			if info.IsDir() {
 				for _, excludeDir := range w.watchConfig.ExcludeDirs {
-					if strings.Contains(path, excludeDir) {
+					if strings.Contains(path, string(os.PathSeparator)+excludeDir) {
 						return filepath.SkipDir
 					}
 				}
+
 				return w.fsWatcher.Add(path)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }
-
 func (w *Watcher) handleFileChanges() {
 	for {
 		select {
@@ -177,6 +208,7 @@ func (w *Watcher) buildAndRun() error {
 
 	if w.isRunning {
 		color.Yellow("⏹️ Stopping previous process...")
+
 		if err := w.stop(); err != nil {
 			return fmt.Errorf("failed to stop process: %v", err)
 		}
@@ -185,21 +217,36 @@ func (w *Watcher) buildAndRun() error {
 	color.Blue("🏗️ Building...")
 
 	outputFile := filepath.Join(w.outputDir, "app")
+
 	if runtime.GOOS == "windows" {
 		outputFile += ".exe"
 	}
 
-	// Run custom scripts
+	outputFile, err := filepath.Abs(outputFile)
+	if err != nil {
+		return fmt.Errorf("failed to resolve output path: %v", err)
+	}
+
 	for _, script := range w.buildConfig.Scripts {
 		cmd := exec.Command("sh", "-c", script)
 		cmd.Dir = w.dirPath
 		cmd.Env = append(os.Environ(), w.buildConfig.Env...)
+
 		if output, err := cmd.CombinedOutput(); err != nil {
 			return fmt.Errorf("script failed: %v\n%s", err, output)
 		}
 	}
 
-	buildCmd := exec.Command("go", append([]string{"build", "-o", outputFile}, w.buildConfig.Flags...)...)
+	args := []string{
+		"build",
+		"-o",
+		outputFile,
+	}
+
+	args = append(args, w.buildConfig.Flags...)
+	args = append(args, ".")
+
+	buildCmd := exec.Command("go", args...)
 	buildCmd.Dir = w.dirPath
 	buildCmd.Env = append(os.Environ(), w.buildConfig.Env...)
 
@@ -208,9 +255,11 @@ func (w *Watcher) buildAndRun() error {
 	}
 
 	w.lastBuildDuration = time.Since(buildStart)
+
 	color.Green("✅ Build successful (took %v)", w.lastBuildDuration)
 
 	w.cmd = exec.Command(outputFile)
+	w.cmd.Dir = w.dirPath
 	w.cmd.Stdout = os.Stdout
 	w.cmd.Stderr = os.Stderr
 	w.cmd.Env = append(os.Environ(), w.buildConfig.Env...)
@@ -220,6 +269,7 @@ func (w *Watcher) buildAndRun() error {
 	}
 
 	w.isRunning = true
+
 	color.HiGreen("🚀 Process started (build #%d)", w.buildCount)
 
 	go func() {
